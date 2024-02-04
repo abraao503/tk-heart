@@ -2,6 +2,8 @@ import express from "express";
 import joi from "joi";
 import { makeReactToUser } from "./factories/makeReactToUser";
 import { isValidObjectId } from "mongoose";
+import { makeGetAllUsers } from "./factories/makeGetAllUsers";
+import "./scheduler";
 
 const app = express();
 
@@ -9,6 +11,22 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
+});
+
+app.get("/users", async (req, res) => {
+  try {
+    const getAllUsers = makeGetAllUsers();
+
+    const users = await getAllUsers.execute();
+
+    return res.status(200).json(users);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    return res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.post("/react-to-user", async (req, res) => {

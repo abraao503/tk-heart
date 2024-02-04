@@ -20,4 +20,8 @@ export interface UserRepository {
   getUserById(id: string): Promise<User | null>;
 
   reactToUser(userId: string, reaction: Reaction): Promise<void>;
+
+  getAll(): Promise<User[]>;
+
+  resetReactions(): Promise<void>;
 }
